@@ -90,11 +90,18 @@ public class AccountServiceImpl implements IAccountService {
 
             AccountEntity accountEntity = response.get();
 
-            if(transactionAccount.getOperation().equals("RETIRO"))
-                accountEntity.setAmount(accountEntity.getAmount().subtract(transactionAccount.getAmount()));
-
-            if(transactionAccount.getOperation().equals("DEPOSITO"))
+            //VALIDAR RETIRO
+            if(transactionAccount.getOperation().equals("RETIRO")) {
+                if (accountEntity.getAmount().compareTo(transactionAccount.getAmount()) >= 0)
+                    accountEntity.setAmount(accountEntity.getAmount().subtract(transactionAccount.getAmount()));
+                else {
+                    msj = "NO TIENE SALDO A RETIRAR";
+                    return msj;
+                }
+            }
+            else if(transactionAccount.getOperation().equals("DEPOSITO")) {
                 accountEntity.setAmount(accountEntity.getAmount().add(transactionAccount.getAmount()));
+            }else return "OPERACION INCORRECTA ES RETIRO O DEPOSITO";
 
             repository.save(accountEntity);
 
