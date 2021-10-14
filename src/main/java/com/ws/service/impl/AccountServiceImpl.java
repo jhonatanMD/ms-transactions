@@ -8,6 +8,7 @@ import com.ws.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -64,6 +65,28 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     public String transaction(TransactionAccount transactionAccount) {
-        return null;
+
+        Optional<AccountEntity> response =  repository.findById(transactionAccount.getIdAccount());
+
+        String msj = "";
+        if(response.isPresent()){
+
+            AccountEntity accountEntity = response.get();
+
+            if(transactionAccount.getOperation().equals("RETIRO"))
+                accountEntity.setAmount(accountEntity.getAmount().subtract(transactionAccount.getAmount()));
+
+            if(transactionAccount.getOperation().equals("DEPOSITO"))
+                accountEntity.setAmount(accountEntity.getAmount().add(transactionAccount.getAmount()));
+
+            repository.save(accountEntity);
+
+            msj = "OPERACION EXITOSA";
+
+        }
+
+        msj = "OCURRIO ALGO EN EL PROCESO";
+
+        return msj;
     }
 }

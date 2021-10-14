@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Setter
 public class TransactionAccount {
 
-    private Long id;
+    private Long idAccount;
     private String operation;
     private BigDecimal amount;
 }
