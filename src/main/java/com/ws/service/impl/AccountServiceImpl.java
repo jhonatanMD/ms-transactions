@@ -60,7 +60,24 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     public Account findById(Long id) {
-        return null;
+
+        Optional<AccountEntity> response = repository.findById(id);
+
+        if(response.isPresent()){
+
+            AccountEntity accountEntity = response.get();
+
+            Account account = new Account();
+
+            account.setIdCustomer(accountEntity.getIdCustomer());
+            account.setId(accountEntity.getId());
+            account.setAmount(accountEntity.getAmount());
+
+            return account;
+        }
+
+        throw  new NullPointerException("No se entro cuenta!");
+
     }
 
     @Override
@@ -82,6 +99,8 @@ public class AccountServiceImpl implements IAccountService {
             repository.save(accountEntity);
 
             msj = "OPERACION EXITOSA";
+
+            return msj;
 
         }
 
